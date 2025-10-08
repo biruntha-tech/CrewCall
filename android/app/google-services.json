@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "898165572209",
+    "project_id": "crewcallflutter",
+    "storage_bucket": "crewcallflutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898165572209:android:0f84214750ca953f0451d0",
+        "android_client_info": {
+          "package_name": "com.example.crewcall_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9SQf4N_GVjD6gDxwfEo7Aq4Qei6_1jjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
