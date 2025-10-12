@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../pages/EventPage.dart';
+import '../pages/Create_EventPage.dart';
 
 class EmailAuth extends StatefulWidget {
   const EmailAuth({super.key});
@@ -51,10 +51,10 @@ class _EmailAuthState extends State<EmailAuth> {
           ),
         );
         
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CreateEventPage()),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const CreateEventPage()),
+        // );
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
