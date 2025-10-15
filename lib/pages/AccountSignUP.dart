@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:crewcall_flutter/authentication/googleauth.dart';
 import 'package:crewcall_flutter/pages/profilePage.dart';
 import 'package:crewcall_flutter/pages/main_navigation.dart';
+import 'package:crewcall_flutter/pages/talentprofile_setup.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
 import 'AccountSignIn.dart';
 
 class TalentSignupPage extends StatefulWidget {
@@ -19,6 +21,41 @@ class _SignupPageState extends State<TalentSignupPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+  bool _agreedToTerms = false;
+
+  String? _validateName(String? value) {
+    if (value == null || value.isEmpty) return 'This field is required';
+    if (value.length < 2) return 'Name must be at least 2 characters';
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) return 'Email is required';
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) return 'Enter a valid email';
+    return null;
+  }
+
+  String? _validatePhone(String? value) {
+    if (value == null || value.isEmpty) return 'Phone number is required';
+    if (value.length < 10) return 'Enter a valid phone number';
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) return 'Password is required';
+    if (value.length < 8) return 'Password must be at least 8 characters';
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) return 'Please confirm your password';
+    if (value != passwordController.text) return 'Passwords do not match';
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +65,7 @@ class _SignupPageState extends State<TalentSignupPage> {
         elevation: 1,
         title: Row(
           children: [
-            const Icon(Icons.headphones, color: Colors.orange, size: 30),
+            const Icon(Icons.headphones, color: AppColors.primary, size: 30),
             const SizedBox(width: 8),
             Text(
               "CrewCall",
@@ -50,7 +87,9 @@ class _SignupPageState extends State<TalentSignupPage> {
           ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
-          child: Column(
+          child: Form(
+            key: _formKey,
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -110,8 +149,9 @@ class _SignupPageState extends State<TalentSignupPage> {
               // First Name field
               Text("First Name", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
                 controller: firstNameController,
+                validator: _validateName,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -121,8 +161,9 @@ class _SignupPageState extends State<TalentSignupPage> {
               // Last Name field
               Text("Last Name", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
                 controller: lastNameController,
+                validator: _validateName,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -132,8 +173,10 @@ class _SignupPageState extends State<TalentSignupPage> {
               // Email field
               Text("Email Address", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
                 controller: emailController,
+                validator: _validateEmail,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -143,8 +186,10 @@ class _SignupPageState extends State<TalentSignupPage> {
               // Phone Number field
               Text("Phone Number", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
                 controller: phoneController,
+                validator: _validatePhone,
+                keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -154,7 +199,9 @@ class _SignupPageState extends State<TalentSignupPage> {
               // Password field
               Text("Password", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
+                controller: passwordController,
+                validator: _validatePassword,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -165,7 +212,9 @@ class _SignupPageState extends State<TalentSignupPage> {
               // Confirm Password field
               Text("Confirm Password", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
+                controller: confirmPasswordController,
+                validator: _validateConfirmPassword,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -198,16 +247,96 @@ class _SignupPageState extends State<TalentSignupPage> {
               ],
               const SizedBox(height: 5),
 
-              // Password Rules
-              Column(
+              // Terms and Conditions Checkbox
+              const SizedBox(height: 20),
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  PasswordRule(text: "At least 8 characters"),
-                  PasswordRule(text: "Contains a number"),
-                  PasswordRule(text: "Special character"),
+                children: [
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      checkboxTheme: CheckboxThemeData(
+                        fillColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.selected)) {
+                              return AppColors.primary;
+                            }
+                            return Colors.white;
+                          },
+                        ),
+                        checkColor: MaterialStateProperty.all(Colors.white),
+                        side: const BorderSide(color: Colors.black, width: 1),
+                      ),
+                    ),
+                    child: Checkbox(
+                      value: _agreedToTerms,
+                      onChanged: (value) {
+                        setState(() {
+                          _agreedToTerms = value ?? false;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(color: Colors.black, fontSize: 14),
+                          children: [
+                            const TextSpan(text: "I agree to the "),
+                            WidgetSpan(
+                              child: GestureDetector(
+                                onTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Terms of Use page would open here')),
+                                  );
+                                },
+                                child: const Text(
+                                  "Terms of Use",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const TextSpan(text: " and "),
+                            WidgetSpan(
+                              child: GestureDetector(
+                                onTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Privacy Policy page would open here')),
+                                  );
+                                },
+                                child: const Text(
+                                  "Privacy Policy",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
+
+              // Password Rules
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: const [
+              //     PasswordRule(text: "At least 8 characters"),
+              //     PasswordRule(text: "Contains a number"),
+              //     PasswordRule(text: "Special character"),
+              //   ],
+              // ),
+              // const SizedBox(height: 20),
 
               // Action Buttons Container
               Container(
@@ -219,28 +348,43 @@ class _SignupPageState extends State<TalentSignupPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: AppColors.primary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        onPressed: () {
-                          // Save user data
-                          String fullName = '${firstNameController.text} ${lastNameController.text}'.trim();
-                          UserData.setUserData(
-                            fullName,
-                            emailController.text,
-                            phoneController.text,
-                          );
-                          
-                          // Navigate to main app
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const MainNavigation()),
-                          );
+                        onPressed: _isLoading ? null : () async {
+                          if (_formKey.currentState!.validate() && _agreedToTerms) {
+                            setState(() => _isLoading = true);
+                            
+                            await Future.delayed(Duration(seconds: 1));
+                            
+                            String fullName = '${firstNameController.text} ${lastNameController.text}'.trim();
+                            UserData.setUserData(
+                              fullName,
+                              emailController.text,
+                              phoneController.text,
+                            );
+                            
+                            setState(() => _isLoading = false);
+                            
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const TalentProfilePage()),
+                            );
+                          } else if (!_agreedToTerms) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please agree to the Terms of Use and Privacy Policy'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         },
-                        child: const Text(
-                          "Create Account",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
+                        child: _isLoading
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : const Text(
+                                "Create Account",
+                                style: TextStyle(fontSize: 16, color: Colors.white),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -251,7 +395,7 @@ class _SignupPageState extends State<TalentSignupPage> {
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          side: const BorderSide(color: Colors.orange),
+                          side: const BorderSide(color: AppColors.primary),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -261,7 +405,7 @@ class _SignupPageState extends State<TalentSignupPage> {
                         },
                         child: const Text(
                           "Already have an account? Login",
-                          style: TextStyle(fontSize: 16, color: Colors.orange),
+                          style: TextStyle(fontSize: 16, color: AppColors.primary),
                         ),
                       ),
                     ),
@@ -286,6 +430,7 @@ class _SignupPageState extends State<TalentSignupPage> {
                 ),
               ),
             ],
+            ),
           ),
         ),
       ),
@@ -297,9 +442,9 @@ class _SignupPageState extends State<TalentSignupPage> {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: selected ? Colors.orange : Colors.white,
+          backgroundColor: selected ? AppColors.primary : Colors.white,
           foregroundColor: selected ? Colors.white : Colors.black,
-          side: const BorderSide(color: Colors.orange),
+          side: const BorderSide(color: AppColors.primary),
         ),
         onPressed: () {
           setState(() {
@@ -315,9 +460,9 @@ class _SignupPageState extends State<TalentSignupPage> {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: selected ? Colors.orange : Colors.white,
+          backgroundColor: selected ? AppColors.primary : Colors.white,
           foregroundColor: selected ? Colors.white : Colors.black,
-          side: const BorderSide(color: Colors.orange),
+          side: const BorderSide(color: AppColors.primary),
         ),
         onPressed: () {
           setState(() {

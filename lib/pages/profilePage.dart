@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:crewcall_flutter/pages/welcome.dart';
+import 'package:crewcall_flutter/pages/AccountSignUP.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 // import 'package:crewcall_flutter/pages/EventPage.dart';
 // import 'package:crewcall_flutter/pages/talentpage.dart';
 
@@ -8,6 +15,7 @@ class UserData {
   static String? email;
   static String? phone;
   static List<String> workLocations = [];
+  static String? profileImagePath;
 
   static void setUserData(String userName, String userEmail, String userPhone) {
     name = userName;
@@ -20,6 +28,7 @@ class UserData {
     email = null;
     phone = null;
     workLocations.clear();
+    profileImagePath = null;
   }
 }
 
@@ -35,8 +44,126 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
 
   bool notificationsEnabled = true;
+
+  void _switchAccount() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Switch Account'),
+          content: const Text('Choose an option to continue:'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                UserData.clearUserData();
+                Navigator.of(context).pop();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TalentSignupPage()),
+                  (route) => false,
+                );
+              },
+              child: const Text('Create Account'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                UserData.clearUserData();
+                Navigator.of(context).pop();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WelcomePage()),
+                  (route) => false,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+              ),
+              child: const Text('Login Different'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location services are disabled')),
+        );
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')),
+          );
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location permissions are permanently denied')),
+        );
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition();
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        String address = '${place.locality}, ${place.administrativeArea}, ${place.country}';
+        setState(() {
+          locationController.text = address;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error getting location: $e')),
+      );
+    }
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 75,
+      );
+      
+      if (image != null) {
+        setState(() {
+          UserData.profileImagePath = image.path;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error picking image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -58,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.primary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -75,10 +202,18 @@ class _ProfilePageState extends State<ProfilePage> {
               // Profile Header
               Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 35,
-                    backgroundColor: Colors.grey,
-                    child: Icon(Icons.person, size: 40, color: Colors.white),
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.grey,
+                      backgroundImage: UserData.profileImagePath != null
+                          ? FileImage(File(UserData.profileImagePath!))
+                          : null,
+                      child: UserData.profileImagePath == null
+                          ? const Icon(Icons.person, size: 40, color: Colors.white)
+                          : null,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -109,9 +244,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Container(
                     padding: const EdgeInsets.all(4),
                     child: OutlinedButton(
-                      onPressed: () {
-                        // TODO: Add photo picker
-                      },
+                      onPressed: _pickImage,
                       child: const Text("Update Photo"),
                     ),
                   ),
@@ -187,9 +320,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
+                        backgroundColor: AppColors.primary,
                       ),
                       child: const Text("Add"),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    child: IconButton(
+                      onPressed: _getCurrentLocation,
+                      icon: const Icon(Icons.my_location),
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -214,8 +359,8 @@ class _ProfilePageState extends State<ProfilePage> {
               SwitchListTile(
                 value: notificationsEnabled,
                 //  tileColor: Colors.orange,
-                 hoverColor: Colors.orange,
-                 activeColor: Colors.orange,
+                 hoverColor: AppColors.primary,
+                 activeColor: AppColors.primary,
                 onChanged: (val) {
                   setState(() => notificationsEnabled = val);
                 },
@@ -269,11 +414,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          // TODO: Switch account logic
-                        },
+                        onPressed: _switchAccount,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: AppColors.primary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: const Text("Switch account"),

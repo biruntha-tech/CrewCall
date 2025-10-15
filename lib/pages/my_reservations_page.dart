@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
 
 class MyReservationsPage extends StatelessWidget {
   final List<Map<String, dynamic>> reservedEvents;
@@ -10,7 +11,7 @@ class MyReservationsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Reservations"),
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
       body: Padding(

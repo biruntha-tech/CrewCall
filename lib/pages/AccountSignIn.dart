@@ -1,6 +1,8 @@
+import 'package:crewcall_flutter/pages/AccountSignUP.dart';
 import 'package:flutter/material.dart';
 import 'package:crewcall_flutter/pages/main_navigation.dart';
 import 'package:crewcall_flutter/pages/profilePage.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
 
 class AccountSignInPage extends StatefulWidget {
   const AccountSignInPage({super.key});
@@ -12,6 +14,28 @@ class AccountSignInPage extends StatefulWidget {
 class _AccountSignInPageState extends State<AccountSignInPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      return 'Enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +45,7 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
         elevation: 1,
         title: Row(
           children: [
-            const Icon(Icons.headphones, color: Colors.orange, size: 30),
+            const Icon(Icons.headphones, color: AppColors.primary, size: 30),
             const SizedBox(width: 8),
             Text(
               "CrewCall",
@@ -44,7 +68,9 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
+            child: Form(
+              key: _formKey,
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
               const SizedBox(height: 20),
@@ -62,14 +88,17 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
               ),
               const SizedBox(height: 30),
 
-              // Username field
-              Text("Username or Email", style: TextStyle(fontWeight: FontWeight.w500)),
+              // Email field
+              Text("Email", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
                 controller: usernameController,
+                validator: _validateEmail,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Enter your username or email",
+                  hintText: "Enter your email",
+                  errorStyle: TextStyle(color: Colors.red),
                 ),
               ),
               const SizedBox(height: 16),
@@ -77,12 +106,14 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
               // Password field
               Text("Password", style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 5),
-              TextField(
+              TextFormField(
                 controller: passwordController,
+                validator: _validatePassword,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter your password",
+                  errorStyle: TextStyle(color: Colors.red),
                 ),
               ),
               const SizedBox(height: 20),
@@ -97,27 +128,26 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: AppColors.primary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        onPressed: () {
-                          // Simple login validation
-                          if (usernameController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                            // For demo purposes, accept any non-empty credentials
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MainNavigation()),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Please enter username and password')),
-                            );
+                        onPressed: _isLoading ? null : () async {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() => _isLoading = true);
+                            
+                            // Simulate login process
+                            await Future.delayed(Duration(seconds: 1));
+                            
+                            setState(() => _isLoading = false);
+                            Navigator.pushReplacementNamed(context, '/main');
                           }
                         },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
+                        child: _isLoading
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : const Text(
+                                "Login",
+                                style: TextStyle(fontSize: 16, color: Colors.white),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -147,7 +177,7 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
                     const Text("Don't have an account?"),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const TalentSignupPage()));
                       },
                       child: const Text("Sign Up"),
                     ),
@@ -155,6 +185,7 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
                 ),
               ),
               ],
+              ),
             ),
           ),
         ),

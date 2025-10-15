@@ -1,6 +1,7 @@
 // import 'package:crewcall_flutter/pages/talentpage.dart';
 // import 'package:crewcall_flutter/pages/profilePage.dart';
 import 'package:flutter/material.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -259,7 +260,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       // TODO: Add participant
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
@@ -362,7 +363,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         // TODO: Send request
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
+                        backgroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),

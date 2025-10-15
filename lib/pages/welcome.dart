@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
 import 'AccountSignUP.dart';
 import 'AccountSignIn.dart';
 // import 'EventPage.dart';
@@ -16,7 +17,7 @@ class WelcomePage extends StatelessWidget {
         elevation: 1,
         title: Row(
           children: [
-            const Icon(Icons.headphones, color: Colors.orange, size: 30),
+            const Icon(Icons.headphones, color: AppColors.primary, size: 30),
             const SizedBox(width: 8),
             Text(
               "CrewCall",
@@ -72,7 +73,7 @@ class WelcomePage extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: AppColors.primary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         onPressed: () {
@@ -96,7 +97,7 @@ class WelcomePage extends StatelessWidget {
                       child: OutlinedButton.icon(
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          side: const BorderSide(color: Colors.orange),
+                          side: const BorderSide(color: AppColors.primary),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -104,10 +105,10 @@ class WelcomePage extends StatelessWidget {
                             MaterialPageRoute(builder: (context) => const TalentSignupPage()),
                           );
                         },
-                        icon: const Icon(Icons.person_add, color: Colors.orange),
+                        icon: const Icon(Icons.person_add, color: AppColors.primary),
                         label: const Text(
                           "Sign Up",
-                          style: TextStyle(fontSize: 16, color: Colors.orange),
+                          style: TextStyle(fontSize: 16, color: AppColors.primary),
                         ),
                       ),
                     ),

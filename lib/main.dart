@@ -18,7 +18,7 @@ class CrewCallApp extends StatelessWidget {
       initialRoute: "/welcome",
       routes: {
         "/welcome": (context) => const WelcomePage(),
-        "/main": (context) => const MainNavigation(),
+        "/main": (context) => const MainNavigation(fromLogin: true),
       },
     );
   }

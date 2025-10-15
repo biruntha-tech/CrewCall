@@ -1,14 +1,17 @@
 import 'package:crewcall_flutter/pages/Create_EventPage.dart';
 import 'package:crewcall_flutter/pages/Reserved_events_page.dart';
 import 'package:crewcall_flutter/pages/profilePage.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Homepage.dart';
 // import 'package:crewcall_flutter/pages/EventPage.dart';
 // import 'package:crewcall_flutter/pages/event_registration_page.dart';
 // import 'package:crewcall_flutter/pages/talentpage.dart';
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  final bool fromLogin;
+  const MainNavigation({super.key, this.fromLogin = false});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -18,10 +21,33 @@ class _MainNavigationState extends State<MainNavigation> {
   int selectedIndex = 0;
   List<Map<String, dynamic>> events = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedIndex();
+  }
+
+  _loadSelectedIndex() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (widget.fromLogin) {
+      selectedIndex = 0; // Always go to home when coming from login
+      await prefs.setInt('selectedIndex', 0); // Save home as current tab
+    } else {
+      selectedIndex = prefs.getInt('selectedIndex') ?? 0;
+    }
+    setState(() {});
+  }
+
+  _saveSelectedIndex(int index) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('selectedIndex', index);
+  }
+
   void onTapped(int index) {
     setState(() {
       selectedIndex = index;
     });
+    _saveSelectedIndex(index);
   }
 
   void addEvent(Map<String, dynamic> event) {
@@ -33,19 +59,32 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
+      // const TalentProfilePage(),
       const HomePage(),
       const EventsPage(),
       const ProfilePage(),
     ];
 
-    return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: pages,
-      ),
+    return WillPopScope(
+      onWillPop: () async {
+        if (selectedIndex != 0) {
+          // If not on home page, go to home page
+          setState(() {
+            selectedIndex = 0;
+          });
+          _saveSelectedIndex(0);
+          return false; // Don't exit app
+        }
+        return true; // Allow exit from home page
+      },
+      child: Scaffold(
+        body: IndexedStack(
+          index: selectedIndex,
+          children: pages,
+        ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
-        selectedItemColor: Colors.orange,
+        selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
@@ -63,18 +102,19 @@ class _MainNavigationState extends State<MainNavigation> {
         ],
         onTap: onTapped,
       ),
-      floatingActionButton: selectedIndex == 1 ? FloatingActionButton(
-        backgroundColor: Colors.orange,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CreateEventPage(),
-            ),
-          );
-        },
-        child: const Icon(Icons.add, color: Colors.white),
-      ) : null,
+        floatingActionButton: selectedIndex == 1 ? FloatingActionButton(
+          backgroundColor: AppColors.primary,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateEventPage(),
+              ),
+            );
+          },
+          child: const Icon(Icons.add, color: Colors.white),
+        ) : null,
+      ),
     );
   }
 }

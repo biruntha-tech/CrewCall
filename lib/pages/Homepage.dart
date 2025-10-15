@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
+import 'package:crewcall_flutter/pages/talent_detail_page.dart';
+import 'package:crewcall_flutter/pages/bookmarked_talents_page.dart';
+
+// Global bookmarked talents list
+List<Map<String, String>> globalBookmarkedTalents = [];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -65,12 +71,27 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("CrewCall Home"),
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.primary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookmarkedTalentsPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
          padding: const EdgeInsets.all(16),
@@ -114,7 +135,11 @@ class _HomePageState extends State<HomePage> {
                   return FilterChip(
                     label: Text(category),
                     selected: isSelected,
-                    selectedColor: Colors.orange.withOpacity(0.3),
+                    selectedColor: AppColors.selectedChip,
+                    backgroundColor: AppColors.unselectedChip,
+                    labelStyle: TextStyle(
+                      color: isSelected ? AppColors.selectedText : Colors.black,
+                    ),
                     onSelected: (selected) {
                       setState(() {
                         if (selected) {
@@ -165,6 +190,14 @@ class _HomePageState extends State<HomePage> {
                           // Show user profile / actions
                         },
                       ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TalentDetailPage(talent: user),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },

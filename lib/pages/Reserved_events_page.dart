@@ -1,10 +1,12 @@
 // import 'package:crewcall_flutter/pages/Create_EventPage.dart';
 // import 'package:crewcall_flutter/pages/main_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:crewcall_flutter/theme/app_theme.dart';
 import 'Homepage.dart';
 // import 'package:crewcall_flutter/pages/EventPage.dart';
 import 'package:crewcall_flutter/pages/profilePage.dart';
 import 'package:crewcall_flutter/pages/my_reservations_page.dart';
+import 'package:crewcall_flutter/pages/event_history_page.dart';
 // import 'package:crewcall_flutter/pages/event_registration_page.dart';
 
 class EventsPage extends StatefulWidget {
@@ -39,6 +41,22 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   List<Map<String, dynamic>> reservedEvents = [];
+  
+  // Sample participated events history
+  List<Map<String, dynamic>> participatedEvents = [
+    {
+      "title": "Spring Concert 2024",
+      "date": "March 15, 2024",
+      "location": "City Hall",
+      "image": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=200&fit=crop",
+    },
+    {
+      "title": "Winter Festival",
+      "date": "December 20, 2023",
+      "location": "Downtown Plaza",
+      "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop",
+    },
+  ];
 
   void _reserveEvent(Map<String, dynamic> event) {
     setState(() {
@@ -267,7 +285,7 @@ class _EventsPageState extends State<EventsPage> {
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
+                              backgroundColor: AppColors.primary,
                             ),
                             onPressed: () {
                               final reservationCode =
@@ -327,9 +345,20 @@ class _EventsPageState extends State<EventsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Reservation"),
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EventHistoryPage(participatedEvents: participatedEvents),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.bookmark),
             onPressed: () {
@@ -518,7 +547,7 @@ class _EventsPageState extends State<EventsPage> {
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.orange,
+                                        backgroundColor: AppColors.primary,
                                         foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
