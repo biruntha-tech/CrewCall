@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../pages/EventPage.dart';
+import '../pages/Create_EventPage.dart';
 
 class PhoneAuth extends StatefulWidget {
   const PhoneAuth({super.key});
@@ -42,10 +42,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   backgroundColor: Colors.green,
                 ),
               );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const CreateEventPage()),
-              );
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => const CreateEventPage()),
+              // );
             }
           } catch (e) {
             setState(() {
@@ -121,10 +121,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CreateEventPage()),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const CreateEventPage()),
+        // );
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

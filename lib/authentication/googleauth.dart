@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../pages/EventPage.dart';
+import '../pages/Create_EventPage.dart';
 
 class GoogleSignInPage extends StatefulWidget {
   const GoogleSignInPage({super.key});
@@ -56,11 +56,11 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
         );
         
         // Navigate to main app
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CreateEventPage()),
-        );
-      }
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const CreateEventPage()),
+      //   );
+       }
     } catch (e) {
       setState(() {
         _isLoading = false;
