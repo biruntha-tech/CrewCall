@@ -66,12 +66,11 @@ class _HomePageState extends State<HomePage> {
         final searchLower = searchController.text.toLowerCase();
         final nameLower = user["name"]!.toLowerCase();
         final bioLower = user["bio"]!.toLowerCase();
-        return nameLower.contains(searchLower) || bioLower.contains(searchLower);
+        return nameLower.contains(searchLower) ||
+            bioLower.contains(searchLower);
       }).toList();
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +108,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Padding(
-         padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             // Search Bar
@@ -132,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            
+
             // Filter Chips
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -163,7 +162,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // User List
             Expanded(
               child: ListView.builder(
@@ -203,7 +202,8 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TalentDetailPage(talent: user),
+                            builder: (context) =>
+                                TalentDetailPage(talent: user),
                           ),
                         );
                       },
@@ -214,7 +214,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }

@@ -30,7 +30,11 @@ class WelcomePage extends StatelessWidget {
                           color: AppColors.primary,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.headphones, color: Colors.white, size: 24),
+                        child: const Icon(
+                          Icons.headphones,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       const Text(
@@ -53,11 +57,15 @@ class WelcomePage extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                child: _buildImage("https://picsum.photos/200/150?random=1"),
+                                child: _buildImage(
+                                  "https://picsum.photos/200/150?random=1",
+                                ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: _buildImage("https://picsum.photos/200/200?random=2"),
+                                child: _buildImage(
+                                  "https://picsum.photos/200/200?random=2",
+                                ),
                               ),
                             ],
                           ),
@@ -65,11 +73,15 @@ class WelcomePage extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                child: _buildImage("https://picsum.photos/200/200?random=3"),
+                                child: _buildImage(
+                                  "https://picsum.photos/200/200?random=3",
+                                ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: _buildImage("https://picsum.photos/200/150?random=4"),
+                                child: _buildImage(
+                                  "https://picsum.photos/200/150?random=4",
+                                ),
                               ),
                             ],
                           ),
@@ -121,7 +133,11 @@ class WelcomePage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {},
-                        icon: const Icon(Icons.g_mobiledata, color: Colors.black, size: 24),
+                        icon: const Icon(
+                          Icons.g_mobiledata,
+                          color: Colors.black,
+                          size: 24,
+                        ),
                         label: const Text(
                           "Sign Up with Google",
                           style: TextStyle(fontSize: 16, color: Colors.black),
@@ -143,10 +159,16 @@ class WelcomePage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const TalentSignupPage()),
+                            MaterialPageRoute(
+                              builder: (context) => const TalentSignupPage(),
+                            ),
                           );
                         },
-                        icon: const Icon(Icons.email, color: Colors.black, size: 20),
+                        icon: const Icon(
+                          Icons.email,
+                          color: Colors.black,
+                          size: 20,
+                        ),
                         label: const Text(
                           "Sign Up with Email Address",
                           style: TextStyle(fontSize: 16, color: Colors.black),
@@ -168,24 +190,30 @@ class WelcomePage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const TalentSignupPage()),
+                            MaterialPageRoute(
+                              builder: (context) => const TalentSignupPage(),
+                            ),
                           );
                         },
-                        icon: const Icon(Icons.phone, color: Colors.black, size: 20),
+                        icon: const Icon(
+                          Icons.phone,
+                          color: Colors.black,
+                          size: 20,
+                        ),
                         label: const Text(
                           "Sign Up with Phone Number",
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
                     ),
-                    // const Spacer(),
-                    // Login linktext
-                    Text(" "),
+                    const SizedBox(height: 16),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const AccountSignInPage()),
+                          MaterialPageRoute(
+                            builder: (context) => const AccountSignInPage(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -229,9 +257,7 @@ class WelcomePage extends StatelessWidget {
             if (loadingProgress == null) return child;
             return Container(
               color: Colors.grey[300],
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             );
           },
         ),
@@ -241,8 +267,7 @@ class WelcomePage extends StatelessWidget {
 }
 
 void main() {
-  runApp(const MaterialApp(
-    home: WelcomePage(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(
+    const MaterialApp(home: WelcomePage(), debugShowCheckedModeBanner: false),
+  );
 }

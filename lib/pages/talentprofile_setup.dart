@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:crewcall_flutter/pages/main_navigation.dart';
 import 'package:crewcall_flutter/theme/app_theme.dart';
 
 class TalentProfilePage extends StatefulWidget {
@@ -9,14 +10,16 @@ class TalentProfilePage extends StatefulWidget {
 }
 
 class _TalentProfilePageState extends State<TalentProfilePage> {
-  String? selectedExperience = "Professional";
-  final Set<String> selectedSkills = {"Lighting", "Sound", "Video", "Stage", "Projection"};
+  String? selectedExperience = "Intermediate";
+  final Set<String> selectedSkills = {
+    "Lighting",
+    "Sound",
+    "Video",
+    "Stage",
+    "Projection",
+  };
 
-  final List<Map<String, dynamic>> experienceLevels = [
-    {"name": "Professional", "image": "assets/images/professional_icon.png", "icon": Icons.workspace_premium, "color": const Color(0xFFFFE4E1)},
-    {"name": "Hobbyist", "image": "assets/images/hobbyist_icon.png", "icon": Icons.palette, "color": const Color(0xFFF4E6)},
-    {"name": "Student", "image": "assets/images/student_icon.png", "icon": Icons.school, "color": const Color(0xFFE6F3FF)},
-  ];
+  final List<String> experienceLevels = ["Beginner", "Intermediate", "Expert"];
   final List<String> skills = [
     "Lighting",
     "Sound",
@@ -49,13 +52,8 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
     "playback",
     "SFX",
     "Art Department",
-    "PA"
+    "PA",
   ];
-
-  // 🎨 Custom color palette
-  final Color unselectedColor = const Color(0xFFF3F4F6);
-  final Color selectedColor = const Color(0xFFFFF7ED);
-  final Color selectedTextColor = const Color(0xFF9A3413);
 
   @override
   Widget build(BuildContext context) {
@@ -93,20 +91,17 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
               children: [
                 Text(
                   "Set up your talent profile",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   "Choose your experience and skills. You can edit this anytime.",
                   style: TextStyle(color: Colors.grey[600]),
                 ),
-            const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 const SizedBox(height: 20),
-                
+
                 // Experience level
                 const Text(
                   "Experience level",
@@ -115,75 +110,38 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  child: Wrap(
+                    spacing: 10,
                     children: experienceLevels.map((level) {
-                      final isSelected = selectedExperience == level["name"];
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedExperience = level["name"];
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primary : level["color"],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: isSelected ? AppColors.primary : Colors.grey[300]!,
-                                width: 2,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: isSelected ? Colors.white : Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.asset(
-                                    level["image"],
-                                    width: 32,
-                                    height: 32,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(
-                                        level["icon"],
-                                        size: 32,
-                                        color: isSelected ? AppColors.primary : Colors.grey[600],
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  level["name"],
-                                  style: TextStyle(
-                                    color: isSelected ? Colors.white : Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                      final isSelected = selectedExperience == level;
+                      return ChoiceChip(
+                        label: Text(level),
+                        selected: isSelected,
+                        selectedColor: AppColors.primary,
+                        backgroundColor: AppColors.unselectedChip,
+                        labelStyle: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
+                        onSelected: (value) {
+                          setState(() {
+                            selectedExperience = level;
+                          });
+                        },
                       );
                     }).toList(),
                   ),
                 ),
 
-                
                 const SizedBox(height: 25),
                 const Text(
                   "Pick your skills",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
-                
+
                 Container(
                   padding: const EdgeInsets.all(8),
                   child: Wrap(
@@ -206,19 +164,26 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
                         selectedColor: AppColors.selectedChip,
                         backgroundColor: AppColors.unselectedChip,
                         labelStyle: TextStyle(
-                          color: isSelected ? AppColors.selectedText : Colors.black,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                          color: isSelected
+                              ? AppColors.selectedText
+                              : Colors.black,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.normal,
                         ),
                       );
                     }).toList(),
                   ),
                 ),
-                
+
                 const SizedBox(height: 30),
-                
+
                 // Skip and Next Buttons
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 12,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
@@ -232,7 +197,10 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
                           },
                           child: const Text(
                             "Skip",
-                            style: TextStyle(fontSize: 16, color: AppColors.primary),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
                       ),
@@ -265,8 +233,10 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
 }
 
 void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner:false,
-    home: TalentProfilePage(),
-  ));
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: TalentProfilePage(),
+    ),
+  );
 }

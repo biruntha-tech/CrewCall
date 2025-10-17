@@ -41,20 +41,22 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   List<Map<String, dynamic>> reservedEvents = [];
-  
+
   // Sample participated events history
   List<Map<String, dynamic>> participatedEvents = [
     {
       "title": "Spring Concert 2024",
       "date": "March 15, 2024",
       "location": "City Hall",
-      "image": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=200&fit=crop",
+      "image":
+          "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=200&fit=crop",
     },
     {
       "title": "Winter Festival",
       "date": "December 20, 2023",
       "location": "Downtown Plaza",
-      "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop",
+      "image":
+          "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop",
     },
   ];
 
@@ -147,12 +149,18 @@ class _EventsPageState extends State<EventsPage> {
       filteredEvents = events.where((event) {
         final searchLower = searchController.text.toLowerCase();
         final titleMatch = event["title"]!.toLowerCase().contains(searchLower);
-        final locationMatch = event["location"]!.toLowerCase().contains(searchLower);
-        final organizerMatch = event["organizer"]!.toLowerCase().contains(searchLower);
-        
+        final locationMatch = event["location"]!.toLowerCase().contains(
+          searchLower,
+        );
+        final organizerMatch = event["organizer"]!.toLowerCase().contains(
+          searchLower,
+        );
+
         final searchMatch = titleMatch || locationMatch || organizerMatch;
-        final statusMatch = selectedStatusFilter == "All" || event["status"] == selectedStatusFilter;
-        
+        final statusMatch =
+            selectedStatusFilter == "All" ||
+            event["status"] == selectedStatusFilter;
+
         return searchMatch && statusMatch;
       }).toList();
     });
@@ -355,7 +363,8 @@ class _EventsPageState extends State<EventsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EventHistoryPage(participatedEvents: participatedEvents),
+                  builder: (context) =>
+                      EventHistoryPage(participatedEvents: participatedEvents),
                 ),
               );
             },
@@ -366,7 +375,8 @@ class _EventsPageState extends State<EventsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MyReservationsPage(reservedEvents: reservedEvents),
+                  builder: (context) =>
+                      MyReservationsPage(reservedEvents: reservedEvents),
                 ),
               );
             },
@@ -382,7 +392,10 @@ class _EventsPageState extends State<EventsPage> {
             itemBuilder: (context) => [
               const PopupMenuItem(value: "All", child: Text("All Events")),
               const PopupMenuItem(value: "Open", child: Text("Open")),
-              const PopupMenuItem(value: "Almost Full", child: Text("Almost Full")),
+              const PopupMenuItem(
+                value: "Almost Full",
+                child: Text("Almost Full"),
+              ),
               const PopupMenuItem(value: "New", child: Text("New")),
             ],
           ),
@@ -391,184 +404,178 @@ class _EventsPageState extends State<EventsPage> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-            children: [
-              // Search Bar
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: "Search events...",
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+          children: [
+            // Search Bar
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: "Search events...",
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               ),
-              
-              // Events List
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: filteredEvents.length,
-                  itemBuilder: (context, index) {
-                    final event = filteredEvents[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 4,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(15),
-                            ),
-                            child: Image.network(
-                              event["image"]!,
-                              height: 150,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
+            ),
+
+            // Events List
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: filteredEvents.length,
+                itemBuilder: (context, index) {
+                  final event = filteredEvents[index];
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(15),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        event["title"]!,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
+                          child: Image.network(
+                            event["image"]!,
+                            height: 150,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      event["title"]!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
                                       ),
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: _getStatusColor(
-                                          event["status"]!,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        event["status"]!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _getStatusColor(event["status"]!),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      event["status"]!,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.calendar_today,
-                                      size: 16,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      event["date"]!,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.calendar_today,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    event["date"]!,
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      event["location"]!,
                                       style: TextStyle(color: Colors.grey[600]),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.location_on,
-                                      size: 16,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Expanded(
-                                      child: Text(
-                                        event["location"]!,
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                        ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.person,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "Organized by ${event["organizer"]!}",
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () =>
+                                        _showParticipants(context, event),
+                                    child: Text(
+                                      "Participants: ${event["participants"]!}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.orange,
+                                        decoration: TextDecoration.underline,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.person,
-                                      size: 16,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      "Organized by ${event["organizer"]!}",
-                                      style: TextStyle(color: Colors.grey[600]),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () =>
-                                          _showParticipants(context, event),
-                                      child: Text(
-                                        "Participants: ${event["participants"]!}",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.orange,
-                                          decoration: TextDecoration.underline,
-                                        ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primary,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primary,
-                                        foregroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        _showEventDetails(context, event);
-                                      },
-                                      child: const Text("View Details"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                    onPressed: () {
+                                      _showEventDetails(context, event);
+                                    },
+                                    child: const Text("View Details"),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }
