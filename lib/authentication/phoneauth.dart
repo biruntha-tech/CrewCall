@@ -14,7 +14,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   String? verificationId;
   bool otpSent = false;
   bool _isLoading = false;
@@ -112,7 +112,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         verificationId: verificationId!,
         smsCode: otpController.text.trim(),
       );
-      
+
       final result = await _auth.signInWithCredential(credential);
       if (result.user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -141,10 +141,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         }
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_errorMessage!),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(_errorMessage!), backgroundColor: Colors.red),
       );
     } catch (e) {
       setState(() {
@@ -170,7 +167,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              
+
               // Phone Icon
               Center(
                 child: Container(
@@ -183,7 +180,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 ),
               ),
               const SizedBox(height: 30),
-              
+
               Center(
                 child: Text(
                   otpSent ? "Verify OTP" : "Phone Verification",
@@ -195,21 +192,18 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 ),
               ),
               const SizedBox(height: 10),
-              
+
               Center(
                 child: Text(
-                  otpSent 
-                    ? "Enter the 6-digit code sent to ${phoneController.text}"
-                    : "Enter your phone number to receive a verification code",
+                  otpSent
+                      ? "Enter the 6-digit code sent to ${phoneController.text}"
+                      : "Enter your phone number to receive a verification code",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ),
               const SizedBox(height: 40),
-              
+
               // Error message
               if (_errorMessage != null)
                 Container(
@@ -226,7 +220,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              
+
               if (!otpSent) ...[
                 // Phone Number Input
                 const Text(
@@ -253,7 +247,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   },
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Send OTP Button
                 SizedBox(
                   width: double.infinity,
@@ -273,7 +267,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           )
                         : const Text(
@@ -304,7 +300,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Verify OTP Button
                 SizedBox(
                   width: double.infinity,
@@ -324,7 +320,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           )
                         : const Text(
@@ -337,7 +335,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Resend OTP
                 Center(
                   child: TextButton(
@@ -350,17 +348,14 @@ class _PhoneAuthState extends State<PhoneAuth> {
                     },
                     child: const Text(
                       "Didn't receive code? Resend",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.green, fontSize: 14),
                     ),
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 20),
-              
+
               Center(
                 child: TextButton(
                   onPressed: () {
@@ -368,10 +363,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   },
                   child: const Text(
                     "Back to Welcome",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ),
               ),

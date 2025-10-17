@@ -17,7 +17,8 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -78,7 +79,10 @@ class AuthService {
   }
 
   // Verify OTP
-  Future<UserCredential?> verifyOTP(String verificationId, String smsCode) async {
+  Future<UserCredential?> verifyOTP(
+    String verificationId,
+    String smsCode,
+  ) async {
     try {
       final credential = PhoneAuthProvider.credential(
         verificationId: verificationId,

@@ -13,7 +13,7 @@
 //   final TextEditingController phoneController = TextEditingController();
 //   final TextEditingController otpController = TextEditingController();
 //   final AuthService _authService = AuthService();
-  
+
 //   String? verificationId;
 //   bool otpSent = false;
 
@@ -67,7 +67,7 @@
 //         child: Column(
 //           children: [
 //             const SizedBox(height: 40),
-            
+
 //             if (!otpSent) ...[
 //               TextField(
 //                 controller: phoneController,

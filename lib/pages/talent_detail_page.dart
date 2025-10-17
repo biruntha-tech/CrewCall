@@ -5,7 +5,7 @@ import 'package:crewcall_flutter/pages/Homepage.dart';
 
 class TalentDetailPage extends StatefulWidget {
   final Map<String, String> talent;
-  
+
   const TalentDetailPage({super.key, required this.talent});
 
   @override
@@ -48,10 +48,7 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    widget.talent["image"]!,
-                    fit: BoxFit.cover,
-                  ),
+                  Image.network(widget.talent["image"]!, fit: BoxFit.cover),
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -108,7 +105,10 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                     // Profile Section
                     const Text(
                       "About",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Text(
@@ -116,29 +116,43 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                       style: TextStyle(color: Colors.grey[700], fontSize: 14),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // Skills Section
                     const Text(
                       "Skills",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 4,
-                      children: ['Performance', 'Live Music', 'Event Management', 'Stage Presence']
-                          .map((skill) => Chip(
-                                label: Text(skill),
-                                backgroundColor: AppColors.unselectedChip,
-                              ))
-                          .toList(),
+                      children:
+                          [
+                                'Performance',
+                                'Live Music',
+                                'Event Management',
+                                'Stage Presence',
+                              ]
+                              .map(
+                                (skill) => Chip(
+                                  label: Text(skill),
+                                  backgroundColor: AppColors.unselectedChip,
+                                ),
+                              )
+                              .toList(),
                     ),
                     const SizedBox(height: 24),
 
                     // Booking Section
                     const Text(
                       "Book Now",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -146,14 +160,20 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Date", style: TextStyle(fontWeight: FontWeight.w500)),
+                        const Text(
+                          "Date",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
                         const SizedBox(height: 8),
                         InkWell(
                           onTap: () => _selectDate(context),
                           borderRadius: BorderRadius.circular(12),
                           child: Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 14,
+                            ),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black12),
                               borderRadius: BorderRadius.circular(12),
@@ -161,7 +181,9 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                             child: Text(
                               selectedDate == null
                                   ? "Select a date"
-                                  : DateFormat('dd MMM yyyy').format(selectedDate!),
+                                  : DateFormat(
+                                      'dd MMM yyyy',
+                                    ).format(selectedDate!),
                               style: TextStyle(
                                 color: selectedDate == null
                                     ? Colors.blueGrey.shade600
@@ -199,7 +221,8 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                       label: "Compensation",
                       value: selectedCompensation,
                       items: const ['Unpaid', 'Paid'],
-                      onChanged: (v) => setState(() => selectedCompensation = v),
+                      onChanged: (v) =>
+                          setState(() => selectedCompensation = v),
                     ),
                     const SizedBox(height: 16),
 
@@ -234,13 +257,17 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                         ),
                         onPressed: () {
                           // Add to bookmarked talents if not already bookmarked
-                          if (!globalBookmarkedTalents.any((t) => t["name"] == widget.talent["name"])) {
+                          if (!globalBookmarkedTalents.any(
+                            (t) => t["name"] == widget.talent["name"],
+                          )) {
                             globalBookmarkedTalents.add(widget.talent);
                           }
-                          
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Booking confirmed for ${widget.talent["name"]} and added to bookmarks'),
+                              content: Text(
+                                'Booking confirmed for ${widget.talent["name"]} and added to bookmarks',
+                              ),
                               backgroundColor: AppColors.primary,
                             ),
                           );
@@ -281,8 +308,10 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
           onChanged: onChanged,
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
           ),
         ),
       ],
@@ -306,8 +335,10 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 12,
+            ),
           ),
         ),
       ],

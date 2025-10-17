@@ -78,42 +78,38 @@ class _MainNavigationState extends State<MainNavigation> {
         return true; // Allow exit from home page
       },
       child: Scaffold(
-        body: IndexedStack(
-          index: selectedIndex,
-          children: pages,
+        body: IndexedStack(index: selectedIndex, children: pages),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: selectedIndex,
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.event), label: "Events"),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: "Profile",
+            ),
+          ],
+          onTap: onTapped,
         ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event),
-            label: "Events",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: "Profile",
-          ),
-        ],
-        onTap: onTapped,
-      ),
-        floatingActionButton: selectedIndex == 1 ? FloatingActionButton(
-          backgroundColor: AppColors.primary,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CreateEventPage(),
-              ),
-            );
-          },
-          child: const Icon(Icons.add, color: Colors.white),
-        ) : null,
+        floatingActionButton: selectedIndex == 1
+            ? FloatingActionButton(
+                backgroundColor: AppColors.primary,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateEventPage(),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.add, color: Colors.white),
+              )
+            : null,
       ),
     );
   }
@@ -248,8 +244,10 @@ List<Map<String, dynamic>> globalReservedEvents = [];
 // }
 
 void main() {
-  runApp(const MaterialApp(
-    home: MainNavigation(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(
+    const MaterialApp(
+      home: MainNavigation(),
+      debugShowCheckedModeBanner: false,
+    ),
+  );
 }

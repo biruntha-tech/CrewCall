@@ -31,7 +31,10 @@ class BookmarkedTalentsPage extends StatelessWidget {
                       SizedBox(height: 20),
                       Text(
                         "No Bookmarked Talents",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         "Book talents to see them here",
@@ -57,7 +60,10 @@ class BookmarkedTalentsPage extends StatelessWidget {
                         ),
                         subtitle: Text(talent["bio"]!),
                         trailing: IconButton(
-                          icon: const Icon(Icons.bookmark, color: Colors.orange),
+                          icon: const Icon(
+                            Icons.bookmark,
+                            color: Colors.orange,
+                          ),
                           onPressed: () {
                             globalBookmarkedTalents.removeAt(index);
                             (context as Element).markNeedsBuild();
@@ -67,7 +73,8 @@ class BookmarkedTalentsPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TalentDetailPage(talent: talent),
+                              builder: (context) =>
+                                  TalentDetailPage(talent: talent),
                             ),
                           );
                         },

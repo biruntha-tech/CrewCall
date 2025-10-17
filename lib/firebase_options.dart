@@ -45,20 +45,20 @@ class DefaultFirebaseOptions {
     appId: "1:898165572209:web:bd7ef6b5125d4af00451d0",
     messagingSenderId: "898165572209",
     projectId: "crewcallflutter",
-  storageBucket: "crewcallflutter.firebasestorage.app",
+    storageBucket: "crewcallflutter.firebasestorage.app",
     authDomain: "crewcallflutter.firebaseapp.com",
-      measurementId: "G-K1TEHV3ZD0"
+    measurementId: "G-K1TEHV3ZD0",
     // storageBucket: 'YOUR_PROJECT_ID.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-  apiKey: "AIzaSyAAC-vdt1jHJ_NVwPcyRssRYcb2e70PBMk",
+    apiKey: "AIzaSyAAC-vdt1jHJ_NVwPcyRssRYcb2e70PBMk",
     appId: "1:898165572209:web:bd7ef6b5125d4af00451d0",
     messagingSenderId: "898165572209",
     projectId: "crewcallflutter",
-  storageBucket: "crewcallflutter.firebasestorage.app",
+    storageBucket: "crewcallflutter.firebasestorage.app",
     authDomain: "crewcallflutter.firebaseapp.com",
-      measurementId: "G-K1TEHV3ZD0"
+    measurementId: "G-K1TEHV3ZD0",
   );
 
   // static const FirebaseOptions ios = FirebaseOptions(
@@ -70,21 +70,21 @@ class DefaultFirebaseOptions {
   //   iosBundleId: 'com.example.crewcallFlutter',
   // );
 
-//   static const FirebaseOptions macos = FirebaseOptions(
-//     apiKey: "AIzaSyAAC-vdt1jHJ_NVwPcyRssRYcb2e70PBMk",
-//     appId: 'YOUR_MACOS_APP_ID',
-//     messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-//     projectId: 'YOUR_PROJECT_ID',
-//     storageBucket: 'YOUR_PROJECT_ID.appspot.com',
-//     iosBundleId: 'com.example.crewcallFlutter',
-//   );
+  //   static const FirebaseOptions macos = FirebaseOptions(
+  //     apiKey: "AIzaSyAAC-vdt1jHJ_NVwPcyRssRYcb2e70PBMk",
+  //     appId: 'YOUR_MACOS_APP_ID',
+  //     messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+  //     projectId: 'YOUR_PROJECT_ID',
+  //     storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+  //     iosBundleId: 'com.example.crewcallFlutter',
+  //   );
 
-//   static const FirebaseOptions windows = FirebaseOptions(
-//     apiKey: "AIzaSyAAC-vdt1jHJ_NVwPcyRssRYcb2e70PBMk",
-//     appId: 'YOUR_WINDOWS_APP_ID',
-//     messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-//     projectId: 'YOUR_PROJECT_ID',
-//     authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-//     storageBucket: 'YOUR_PROJECT_ID.appspot.com',
-//   );
+  //   static const FirebaseOptions windows = FirebaseOptions(
+  //     apiKey: "AIzaSyAAC-vdt1jHJ_NVwPcyRssRYcb2e70PBMk",
+  //     appId: 'YOUR_WINDOWS_APP_ID',
+  //     messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+  //     projectId: 'YOUR_PROJECT_ID',
+  //     authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+  //     storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+  //   );
 }

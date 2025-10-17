@@ -29,7 +29,7 @@ class _EmailAuthState extends State<EmailAuth> {
     try {
       final email = emailController.text.trim();
       final password = passwordController.text;
-      
+
       UserCredential userCredential;
       if (isLogin) {
         userCredential = await _auth.signInWithEmailAndPassword(
@@ -42,15 +42,17 @@ class _EmailAuthState extends State<EmailAuth> {
           password: password,
         );
       }
-      
+
       if (userCredential.user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isLogin ? 'Welcome back!' : 'Account created successfully!'),
+            content: Text(
+              isLogin ? 'Welcome back!' : 'Account created successfully!',
+            ),
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Navigator.pushReplacement(
         //   context,
         //   MaterialPageRoute(builder: (context) => const CreateEventPage()),
@@ -79,12 +81,9 @@ class _EmailAuthState extends State<EmailAuth> {
             _errorMessage = 'Authentication failed: ${e.message}';
         }
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_errorMessage!),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(_errorMessage!), backgroundColor: Colors.red),
       );
     } catch (e) {
       setState(() {
@@ -110,7 +109,7 @@ class _EmailAuthState extends State<EmailAuth> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              
+
               // Email Icon
               Center(
                 child: Container(
@@ -123,7 +122,7 @@ class _EmailAuthState extends State<EmailAuth> {
                 ),
               ),
               const SizedBox(height: 30),
-              
+
               Center(
                 child: Text(
                   isLogin ? "Sign in with Email" : "Create Account",
@@ -135,21 +134,18 @@ class _EmailAuthState extends State<EmailAuth> {
                 ),
               ),
               const SizedBox(height: 10),
-              
+
               Center(
                 child: Text(
-                  isLogin 
-                    ? "Enter your credentials to continue" 
-                    : "Create a new account to get started",
+                  isLogin
+                      ? "Enter your credentials to continue"
+                      : "Create a new account to get started",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ),
               const SizedBox(height: 40),
-              
+
               // Error message
               if (_errorMessage != null)
                 Container(
@@ -166,7 +162,7 @@ class _EmailAuthState extends State<EmailAuth> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              
+
               // Email field
               const Text(
                 "Email Address",
@@ -185,14 +181,16 @@ class _EmailAuthState extends State<EmailAuth> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}\$').hasMatch(value)) {
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}\$',
+                  ).hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              
+
               // Password field
               const Text(
                 "Password",
@@ -218,7 +216,7 @@ class _EmailAuthState extends State<EmailAuth> {
                 },
               ),
               const SizedBox(height: 30),
-              
+
               // Submit button
               SizedBox(
                 width: double.infinity,
@@ -238,7 +236,9 @@ class _EmailAuthState extends State<EmailAuth> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : Text(
@@ -251,7 +251,7 @@ class _EmailAuthState extends State<EmailAuth> {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Toggle between sign in and sign up
               Center(
                 child: TextButton(
@@ -264,19 +264,16 @@ class _EmailAuthState extends State<EmailAuth> {
                     });
                   },
                   child: Text(
-                    isLogin 
-                      ? "Don't have an account? Sign Up" 
-                      : "Already have an account? Sign In",
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontSize: 14,
-                    ),
+                    isLogin
+                        ? "Don't have an account? Sign Up"
+                        : "Already have an account? Sign In",
+                    style: const TextStyle(color: Colors.orange, fontSize: 14),
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               Center(
                 child: TextButton(
                   onPressed: () {
@@ -284,10 +281,7 @@ class _EmailAuthState extends State<EmailAuth> {
                   },
                   child: const Text(
                     "Back to Welcome",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ),
               ),

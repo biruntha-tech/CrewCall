@@ -25,7 +25,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      
+
       if (googleUser == null) {
         setState(() {
           _isLoading = false;
@@ -35,8 +35,9 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
       }
 
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -44,34 +45,35 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
       );
 
       // Sign in to Firebase with the Google credential
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
-      
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+
       if (userCredential.user != null) {
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Welcome ${userCredential.user!.displayName ?? 'User'}!'),
+            content: Text(
+              'Welcome ${userCredential.user!.displayName ?? 'User'}!',
+            ),
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Navigate to main app
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const CreateEventPage()),
-      //   );
-       }
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => const CreateEventPage()),
+        //   );
+      }
     } catch (e) {
       setState(() {
         _isLoading = false;
         _errorMessage = 'Authentication failed: ${e.toString()}';
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_errorMessage!),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(_errorMessage!), backgroundColor: Colors.red),
       );
     }
   }
@@ -104,10 +106,14 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.g_mobiledata, size: 60, color: Colors.red),
+                child: const Icon(
+                  Icons.g_mobiledata,
+                  size: 60,
+                  color: Colors.red,
+                ),
               ),
               const SizedBox(height: 30),
-              
+
               const Text(
                 "Sign in with Google",
                 style: TextStyle(
@@ -117,17 +123,14 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              
+
               const Text(
                 "Continue with your Google account to access CrewCall",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               const SizedBox(height: 40),
-              
+
               // Error message
               if (_errorMessage != null)
                 Container(
@@ -144,7 +147,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              
+
               // Sign in button
               SizedBox(
                 width: double.infinity,
@@ -165,7 +168,9 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Icon(Icons.g_mobiledata, size: 24),
@@ -178,19 +183,16 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 child: const Text(
                   "Back to Welcome",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ),
             ],

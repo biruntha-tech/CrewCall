@@ -51,7 +51,10 @@ class _EventHistoryPageState extends State<EventHistoryPage> {
                       SizedBox(height: 20),
                       Text(
                         "No Event History",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         "Your participated events will appear here",
@@ -88,7 +91,10 @@ class _EventHistoryPageState extends State<EventHistoryPage> {
                             Text("📍 ${event["location"]!}"),
                           ],
                         ),
-                        trailing: const Icon(Icons.check_circle, color: Colors.green),
+                        trailing: const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,

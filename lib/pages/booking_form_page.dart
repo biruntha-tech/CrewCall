@@ -4,7 +4,7 @@ import 'package:crewcall_flutter/theme/app_theme.dart';
 
 class BookingFormPage extends StatefulWidget {
   final Map<String, String>? talent;
-  
+
   const BookingFormPage({super.key, this.talent});
 
   @override
@@ -64,14 +64,20 @@ class _BookingFormPageState extends State<BookingFormPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Date", style: TextStyle(fontWeight: FontWeight.w500)),
+                    const Text(
+                      "Date",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () => _selectDate(context),
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 14,
+                        ),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black12),
                           borderRadius: BorderRadius.circular(12),
@@ -153,7 +159,9 @@ class _BookingFormPageState extends State<BookingFormPage> {
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Booking confirmed for ${widget.talent?['name'] ?? 'talent'}'),
+                          content: Text(
+                            'Booking confirmed for ${widget.talent?['name'] ?? 'talent'}',
+                          ),
                           backgroundColor: AppColors.primary,
                         ),
                       );
@@ -209,8 +217,10 @@ class _BookingFormPageState extends State<BookingFormPage> {
           onChanged: onChanged,
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
           ),
         ),
       ],
@@ -234,8 +244,10 @@ class _BookingFormPageState extends State<BookingFormPage> {
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 12,
+            ),
           ),
         ),
       ],
