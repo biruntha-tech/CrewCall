@@ -106,7 +106,7 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
                       ),
                     )
                   : const Text(
-                      'Send Reset Email',
+                      'Send Link Reset Email password ',
                       style: TextStyle(color: Colors.white),
                     ),
             ),

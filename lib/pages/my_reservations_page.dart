@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:crewcall_flutter/theme/app_theme.dart';
+import 'package:crewcall_flutter/models/event_storage.dart';
 
-class MyReservationsPage extends StatelessWidget {
-  final List<Map<String, dynamic>> reservedEvents;
+class MyReservationsPage extends StatefulWidget {
+  const MyReservationsPage({super.key});
 
-  const MyReservationsPage({super.key, required this.reservedEvents});
+  @override
+  State<MyReservationsPage> createState() => _MyReservationsPageState();
+}
+
+class _MyReservationsPageState extends State<MyReservationsPage> {
+  final EventStorage eventStorage = EventStorage();
+  List<Map<String, dynamic>> reservedEvents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    reservedEvents = List.from(eventStorage.reservedEvents);
+  }
 
   @override
   Widget build(BuildContext context) {
+    reservedEvents = List.from(eventStorage.reservedEvents);
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Reservations"),

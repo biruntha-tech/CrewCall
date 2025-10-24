@@ -3,6 +3,7 @@ import 'package:crewcall_flutter/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:crewcall_flutter/models/event_storage.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({super.key});
@@ -386,7 +387,39 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO: Send request
+                          if (eventNameController.text.isEmpty ||
+                              selectedDate == null ||
+                              selectedTime == null ||
+                              locationController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please fill all required fields'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+
+                          final newEvent = {
+                            "title": eventNameController.text,
+                            "date": DateFormat.yMMMd().format(selectedDate!),
+                            "location": locationController.text,
+                            "organizer": "You",
+                            "image": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=200&fit=crop",
+                            "status": "New",
+                            "participants": "0/50",
+                            "participantList": <String>[],
+                            "roles": selectedRoles.toList(),
+                            "budget": budgetController.text,
+                            "visibility": visibility,
+                            "description": excerptController.text,
+                            "notes": notesController.text,
+                          };
+
+                          EventStorage().addCreatedEvent(newEvent);
+                          print('Event created: ${newEvent["title"]}');
+                          print('Total events: ${EventStorage().getAllEvents().length}');
+                          
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Event created successfully!'),
@@ -403,7 +436,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           ),
                         ),
                         child: const Text(
-                          "Send Request",
+                          "create event",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

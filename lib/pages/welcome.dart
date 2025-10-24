@@ -157,12 +157,12 @@ class WelcomePage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TalentSignupPage(),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const TalentSignupPage(),
+                          //   ),
+                          // );
                         },
                         icon: const Icon(
                           Icons.email,
@@ -188,12 +188,12 @@ class WelcomePage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TalentSignupPage(),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const TalentSignupPage(),
+                          //   ),
+                          // );
                         },
                         icon: const Icon(
                           Icons.phone,

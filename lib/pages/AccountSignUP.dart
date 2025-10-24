@@ -43,7 +43,7 @@ class _SignupPageState extends State<TalentSignupPage> {
 
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) return 'Phone number is required';
-    if (value.length < 10) return 'Enter a valid phone number';
+    if (value.length < 10 && value.length > 10 ) return 'Enter a valid phone number';
     return null;
   }
 

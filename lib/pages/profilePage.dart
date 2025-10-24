@@ -168,6 +168,86 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _showProfilePhotoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Profile Photo'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).pop();
+              //     _pickImage();
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: AppColors.primary,
+              //     minimumSize: const Size(double.infinity, 45),
+              //   ),
+              //   child: const Text(
+              //     'Edit Image',
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _viewProfilePhoto();
+                },
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 45),
+                ),
+                child: const Text('View Profile'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _viewProfilePhoto() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          child: Stack(
+            children: [
+              Center(
+                child: UserData.profileImagePath != null
+                    ? Image.file(
+                        File(UserData.profileImagePath!),
+                        fit: BoxFit.contain,
+                      )
+                    : const Icon(
+                        Icons.person,
+                        size: 200,
+                        color: Colors.white,
+                      ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -207,7 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Row(
                   children: [
                     GestureDetector(
-                      onTap: _pickImage,
+                      onTap: _showProfilePhotoDialog,
                       child: CircleAvatar(
                         radius: 35,
                         backgroundColor: Colors.grey,
