@@ -78,6 +78,10 @@ class _EventsPageState extends State<EventsPage> {
     setState(() {
       events = eventStorage.getAllEvents();
       reservedEvents = List.from(eventStorage.reservedEvents);
+      print('=== REFRESH EVENTS ${DateTime.now()} ===');
+      print('Total events: ${events.length}');
+      print('Created events: ${eventStorage.createdEvents.length}');
+      print('Event titles: ${events.map((e) => e["title"]).toList()}');
       _filterEvents();
     });
   }
@@ -283,11 +287,7 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _refreshEvents();
-  }
+
 
   @override
   Widget build(BuildContext context) {

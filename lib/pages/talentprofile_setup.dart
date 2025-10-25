@@ -55,6 +55,58 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
     "PA",
   ];
 
+  Widget _buildExperienceOption(String level, String imagePath) {
+    final isSelected = selectedExperience == level;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedExperience = level;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected ? AppColors.primary : Colors.grey,
+            width: isSelected ? 2 : 1,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.white,
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                imagePath,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                level,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  color: isSelected ? AppColors.primary : Colors.black,
+                ),
+              ),
+            ),
+            if (isSelected)
+              const Icon(
+                Icons.check_circle,
+                color: AppColors.primary,
+                size: 24,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,28 +162,14 @@ class _TalentProfilePageState extends State<TalentProfilePage> {
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.all(8),
-                  child: Wrap(
-                    spacing: 10,
-                    children: experienceLevels.map((level) {
-                      final isSelected = selectedExperience == level;
-                      return ChoiceChip(
-                        label: Text(level),
-                        selected: isSelected,
-                        selectedColor: AppColors.primary,
-                        backgroundColor: AppColors.unselectedChip,
-                        labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                        onSelected: (value) {
-                          setState(() {
-                            selectedExperience = level;
-                          });
-                        },
-                      );
-                    }).toList(),
+                  child: Column(
+                    children: [
+                      _buildExperienceOption("Beginner", "assets/images/students.jpg"),
+                      const SizedBox(height: 12),
+                      _buildExperienceOption("Intermediate", "assets/images/hobbyist.jpg"),
+                      const SizedBox(height: 12),
+                      _buildExperienceOption("Expert", "assets/images/professional.jpg"),
+                    ],
                   ),
                 ),
 

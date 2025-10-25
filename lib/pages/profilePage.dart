@@ -6,6 +6,7 @@ import 'package:crewcall_flutter/pages/welcome.dart';
 import 'package:crewcall_flutter/pages/AccountSignUP.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:crewcall_flutter/widgets/location_picker.dart';
 
 // Global user data storage
 class UserData {
@@ -43,8 +44,58 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-
+  bool _isGettingLocation = false;
   bool notificationsEnabled = true;
+
+  Future<void> _getCurrentLocation() async {
+    setState(() => _isGettingLocation = true);
+    
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        _showError('Location services are disabled');
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          _showError('Location permissions are denied');
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        _showError('Location permissions are permanently denied');
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition();
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        String address = '${place.locality}, ${place.administrativeArea}, ${place.country}';
+        setState(() {
+          locationController.text = address;
+        });
+      }
+    } catch (e) {
+      _showError('Error getting location: $e');
+    } finally {
+      setState(() => _isGettingLocation = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
 
   void _switchAccount() {
     showDialog(
@@ -93,56 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<void> _getCurrentLocation() async {
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location services are disabled')),
-        );
-        return;
-      }
 
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')),
-          );
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Location permissions are permanently denied'),
-          ),
-        );
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition();
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks[0];
-        String address =
-            '${place.locality}, ${place.administrativeArea}, ${place.country}';
-        setState(() {
-          locationController.text = address;
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error getting location: $e')));
-    }
-  }
 
   Future<void> _pickImage() async {
     try {
@@ -422,11 +424,39 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                       padding: const EdgeInsets.all(4),
                       child: IconButton(
-                        onPressed: _getCurrentLocation,
-                        icon: const Icon(Icons.my_location),
+                        onPressed: _isGettingLocation ? null : _getCurrentLocation,
+                        icon: _isGettingLocation 
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.my_location),
                         style: IconButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      child: IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => LocationPicker(
+                              onLocationSelected: (location) {
+                                setState(() {
+                                  locationController.text = location;
+                                });
+                              },
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.search),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.grey[300],
+                          foregroundColor: Colors.black,
                         ),
                       ),
                     ),

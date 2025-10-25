@@ -1,7 +1,8 @@
 import 'package:crewcall_flutter/pages/AccountSignUP.dart';
+import 'package:crewcall_flutter/pages/talentprofile_setup.dart';
 import 'package:flutter/material.dart';
-import 'package:crewcall_flutter/pages/main_navigation.dart';
-import 'package:crewcall_flutter/pages/profilePage.dart';
+// import 'package:crewcall_flutter/pages/main_navigation.dart';
+// import 'package:crewcall_flutter/pages/profilePage.dart';
 import 'package:crewcall_flutter/theme/app_theme.dart';
 
 class AccountSignInPage extends StatefulWidget {
@@ -234,9 +235,12 @@ class _AccountSignInPageState extends State<AccountSignInPage> {
                                         );
 
                                         setState(() => _isLoading = false);
-                                        Navigator.pushReplacementNamed(
+                                        Navigator.push(
                                           context,
-                                          '/main',
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const TalentProfilePage(),
+                                          ),
                                         );
                                       }
                                     },

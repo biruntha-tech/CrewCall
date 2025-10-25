@@ -3,9 +3,14 @@ import 'package:crewcall_flutter/theme/app_theme.dart';
 import 'package:crewcall_flutter/pages/talent_detail_page.dart';
 import 'package:crewcall_flutter/pages/Homepage.dart';
 
-class BookmarkedTalentsPage extends StatelessWidget {
+class BookmarkedTalentsPage extends StatefulWidget {
   const BookmarkedTalentsPage({super.key});
 
+  @override
+  State<BookmarkedTalentsPage> createState() => _BookmarkedTalentsPageState();
+}
+
+class _BookmarkedTalentsPageState extends State<BookmarkedTalentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,8 +70,9 @@ class BookmarkedTalentsPage extends StatelessWidget {
                             color: Colors.orange,
                           ),
                           onPressed: () {
-                            globalBookmarkedTalents.removeAt(index);
-                            (context as Element).markNeedsBuild();
+                            setState(() {
+                              globalBookmarkedTalents.removeAt(index);
+                            });
                           },
                         ),
                         onTap: () {

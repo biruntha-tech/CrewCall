@@ -21,6 +21,15 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
   final TextEditingController locationController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
 
+  // Sample events for review
+  final List<String> events = [
+    'Summer Music Festival',
+    'Jazz Night Live',
+    'Rock Concert Series',
+    'Acoustic Evening',
+    'Electronic Dance Party',
+  ];
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -33,6 +42,166 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
         selectedDate = picked;
       });
     }
+  }
+
+  void _showReviewDialog() {
+    int? selectedRating;
+    String? selectedEvent;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 8,
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Review ${widget.talent["name"]}',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    
+                    // Rating Dropdown
+                    const Text(
+                      'Rating',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<int>(
+                      value: selectedRating,
+                      hint: const Text('Select rating (1-5)'),
+                      items: [1, 2, 3, 4, 5]
+                          .map((rating) => DropdownMenuItem(
+                                value: rating,
+                                child: Row(
+                                  children: [
+                                    ...List.generate(
+                                      rating,
+                                      (index) => const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    ...List.generate(
+                                      5 - rating,
+                                      (index) => const Icon(
+                                        Icons.star_border,
+                                        color: Colors.grey,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text('$rating'),
+                                  ],
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedRating = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Event Dropdown
+                    const Text(
+                      'Event',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: selectedEvent,
+                      hint: const Text('Select event'),
+                      items: events
+                          .map((event) => DropdownMenuItem(
+                                value: event,
+                                child: Text(event),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedEvent = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    
+                    // Buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Cancel'),
+                        ),
+                        const SizedBox(width: 12),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: selectedRating != null && selectedEvent != null
+                              ? () {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Review submitted: $selectedRating stars for $selectedEvent',
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                }
+                              : null,
+                          child: const Text('Submit'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -243,10 +412,9 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                     ),
                     const SizedBox(height: 24),
 
-                    // CONFIRM BUTTON
+                    // CONFIRM BOOKING BUTTON
                     SizedBox(
                       width: double.infinity,
-                      height: 48,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
@@ -254,6 +422,7 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
                         onPressed: () {
                           // Add to bookmarked talents if not already bookmarked
@@ -275,6 +444,27 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
                         },
                         child: const Text(
                           "Confirm booking",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    
+                    // REVIEW TALENT BUTTON
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.primary,
+                          side: BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        onPressed: _showReviewDialog,
+                        child: const Text(
+                          "Review Talent",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

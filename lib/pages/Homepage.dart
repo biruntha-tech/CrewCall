@@ -18,6 +18,39 @@ class _HomePageState extends State<HomePage> {
   final Set<String> selectedCategories = {};
   List<Map<String, String>> filteredUsers = [];
 
+  // Filter options
+  final List<String> sortOptions = [
+    "Best match",
+    "Experience",
+    "Rating",
+    "Skills",
+    "Gear"
+  ];
+
+  final List<String> skillOptions = [
+    "Lighting",
+    "Sound",
+    "Video",
+    "Rigging",
+    "Stage",
+    "Projection",
+    "Broadcast"
+  ];
+
+  final List<String> gearOptions = [
+    "Camera",
+    "Lighting",
+    "Sound",
+  ];
+
+  final List<String> paidOptions = ["any", "paid", "unpaid"];
+
+  // Selected filter values
+  String selectedSort = "Best match";
+  Set<String> selectedSkills = {};
+  String selectedPaid = "any";
+  Set<String> selectedGear = {};
+
   // Sample chip data
   final List<String> categories = [
     "Lighting",
@@ -72,6 +105,200 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                constraints: const BoxConstraints(maxHeight: 600),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Filter Talents',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Sort by
+                            const Text(
+                              'Sort by',
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<String>(
+                              value: selectedSort,
+                              items: sortOptions
+                                  .map((option) => DropdownMenuItem(
+                                        value: option,
+                                        child: Text(option),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  selectedSort = value!;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            
+                            // Skills priority
+                            const Text(
+                              'Skills priority',
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: skillOptions.map((skill) {
+                                final isSelected = selectedSkills.contains(skill);
+                                return FilterChip(
+                                  label: Text(skill),
+                                  selected: isSelected,
+                                  selectedColor: AppColors.primary.withOpacity(0.2),
+                                  onSelected: (selected) {
+                                    setDialogState(() {
+                                      if (selected) {
+                                        selectedSkills.add(skill);
+                                      } else {
+                                        selectedSkills.remove(skill);
+                                      }
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 20),
+                            
+                            // Paid or unpaid
+                            const Text(
+                              'Paid or unpaid',
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<String>(
+                              value: selectedPaid,
+                              items: paidOptions
+                                  .map((option) => DropdownMenuItem(
+                                        value: option,
+                                        child: Text(option.toUpperCase()),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  selectedPaid = value!;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            
+                            // Gear
+                            const Text(
+                              'Gear',
+                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: gearOptions.map((gear) {
+                                final isSelected = selectedGear.contains(gear);
+                                return FilterChip(
+                                  label: Text(gear),
+                                  selected: isSelected,
+                                  selectedColor: AppColors.primary.withOpacity(0.2),
+                                  onSelected: (selected) {
+                                    setDialogState(() {
+                                      if (selected) {
+                                        selectedGear.add(gear);
+                                      } else {
+                                        selectedGear.remove(gear);
+                                      }
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 20),
+                    // Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              setDialogState(() {
+                                selectedSort = "Best match";
+                                selectedSkills.clear();
+                                selectedPaid = "any";
+                                selectedGear.clear();
+                              });
+                            },
+                            child: const Text('Clear All'),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                // Apply filters here
+                                _filterUsers();
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Apply Filters',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,13 +323,14 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.bookmark),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BookmarkedTalentsPage(),
+                  builder: (context) => const BookmarkedTalentsPage(),
                 ),
               );
+              setState(() {}); // Refresh the page when returning
             },
           ),
         ],
@@ -121,9 +349,7 @@ class _HomePageState extends State<HomePage> {
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.filter_list),
-                    onPressed: () {
-                      // Filter action
-                    },
+                    onPressed: _showFilterDialog,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

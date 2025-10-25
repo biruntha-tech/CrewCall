@@ -4,6 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:crewcall_flutter/models/event_storage.dart';
+import 'package:crewcall_flutter/widgets/location_picker.dart';
+import 'package:crewcall_flutter/widgets/talent_selector.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({super.key});
@@ -27,6 +31,58 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final TextEditingController notesController = TextEditingController();
 
   String visibility = "Public";
+  bool _isGettingLocation = false;
+  List<Map<String, String>> selectedParticipants = [];
+
+  Future<void> _getCurrentLocation() async {
+    setState(() => _isGettingLocation = true);
+    
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        _showError('Location services are disabled');
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          _showError('Location permissions are denied');
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        _showError('Location permissions are permanently denied');
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition();
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        String address = '${place.locality}, ${place.administrativeArea}, ${place.country}';
+        setState(() {
+          locationController.text = address;
+        });
+      }
+    } catch (e) {
+      _showError('Error getting location: $e');
+    } finally {
+      setState(() => _isGettingLocation = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
 
   // Roles selection
   final List<String> roles = [
@@ -213,15 +269,56 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: locationController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.location_on_outlined),
-                    hintText: "City, Venue, or Address",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: locationController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.location_on_outlined),
+                          hintText: "City, Venue, or Address",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: _isGettingLocation ? null : _getCurrentLocation,
+                      icon: _isGettingLocation 
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.my_location),
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => LocationPicker(
+                            onLocationSelected: (location) {
+                              setState(() {
+                                locationController.text = location;
+                              });
+                            },
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.search),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.grey[300],
+                        foregroundColor: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
 
@@ -276,7 +373,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
-                        // TODO: Add participant
+                        showDialog(
+                          context: context,
+                          builder: (context) => TalentSelector(
+                            selectedTalents: selectedParticipants,
+                            onTalentsSelected: (talents) {
+                              setState(() {
+                                selectedParticipants = talents;
+                              });
+                            },
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
@@ -291,6 +398,42 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
+                if (selectedParticipants.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Selected Participants:",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: selectedParticipants.map((participant) {
+                            return Chip(
+                              avatar: CircleAvatar(
+                                backgroundImage: NetworkImage(participant["image"]!),
+                              ),
+                              label: Text(participant["name"]!),
+                              onDeleted: () {
+                                setState(() {
+                                  selectedParticipants.remove(participant);
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
                 const SizedBox(height: 20),
 
                 // Budget & Visibility
@@ -408,7 +551,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             "image": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=200&fit=crop",
                             "status": "New",
                             "participants": "0/50",
-                            "participantList": <String>[],
+                            "participantList": selectedParticipants.map((p) => p["name"]!).toList(),
                             "roles": selectedRoles.toList(),
                             "budget": budgetController.text,
                             "visibility": visibility,
@@ -416,9 +559,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             "notes": notesController.text,
                           };
 
-                          EventStorage().addCreatedEvent(newEvent);
+                          final storage = EventStorage();
+                          storage.addCreatedEvent(newEvent);
                           print('Event created: ${newEvent["title"]}');
-                          print('Total events: ${EventStorage().getAllEvents().length}');
+                          print('Total events: ${storage.getAllEvents().length}');
+                          print('Created events count: ${storage.createdEvents.length}');
+                          print('All events: ${storage.getAllEvents().map((e) => e["title"]).toList()}');
                           
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

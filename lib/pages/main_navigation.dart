@@ -20,6 +20,7 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int selectedIndex = 0;
   List<Map<String, dynamic>> events = [];
+  Key eventsPageKey = UniqueKey();
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       const HomePage(),
-      const EventsPage(),
+      EventsPage(key: eventsPageKey),
       const ProfilePage(),
     ];
 
@@ -98,13 +99,17 @@ class _MainNavigationState extends State<MainNavigation> {
         floatingActionButton: selectedIndex == 1
             ? FloatingActionButton(
                 backgroundColor: AppColors.primary,
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const CreateEventPage(),
                     ),
                   );
+                  // Force refresh by creating new key
+                  setState(() {
+                    eventsPageKey = UniqueKey();
+                  });
                 },
                 child: const Icon(Icons.add, color: Colors.white),
               )
